@@ -15,6 +15,7 @@ class User extends Authenticatable
     const USUARIO_NO_VERIFICADO = '0';
     const USUARIO_ADMINISTRADOR = 'true';
     const USUARIO_REGULAR = 'false';
+    const ROLE = '2';
 
     protected $table = 'users';
     /**
@@ -23,7 +24,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+       'role_id','name','lastname', 'email', 'telefono','sexo','edad', 'password',
     ];
 
 
@@ -59,6 +60,20 @@ class User extends Authenticatable
     public function costumerdetail()
     {
         return $this->hasOne('App\CustomerDetail');
+    }
+
+    public function esVerificado(){
+        return $this->verified = User::USUARIO_VERIFICADO;
+    }
+
+    public function esAdministrador()
+    {
+        return $this->admin = User::USUARIO_ADMINISTRADOR;
+    }
+
+    public static function generarVerificationToken()
+    {
+        return str_random(40);
     }
 
 }

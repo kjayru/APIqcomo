@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Controllers\ApiController;
 
-class ReservaController extends Controller
+class ReservaController extends ApiController
 {
     /**
      * Display a listing of the resource.

@@ -17,7 +17,9 @@ Route::resource('cuadro-de-comandos','ComandoController',['only'=>['index','show
 
 Route::resource('franquiciado','FranquiciadoController',['only'=>['index','show']]);
 
-Route::resource('clientes','ClientController',['only'=>['index','show']]);
+Route::resource('clientes','ClientController',['except'=>['create','edit']]);
+
+//Route::post('clientes','ClientController@store')->name('clientes.store');
 
 Route::resource('mesas','MesaController',['only'=>['index','show']]);
 

@@ -1,10 +1,10 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Http\Controllers\ApiController;
 use Illuminate\Http\Request;
 
-class MarketingController extends Controller
+class MarketingController extends ApiController
 {
     /**
      * Display a listing of the resource.

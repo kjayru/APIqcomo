@@ -1,10 +1,10 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Http\Controllers\ApiController;
 use Illuminate\Http\Request;
 
-class PushController extends Controller
+class PushController extends ApiController
 {
     /**
      * Display a listing of the resource.

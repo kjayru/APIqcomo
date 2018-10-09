@@ -1,10 +1,10 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Http\Controllers\ApiController;
 use Illuminate\Http\Request;
 
-class PedidoController extends Controller
+class PedidoController extends ApiController
 {
     /**
      * Display a listing of the resource.

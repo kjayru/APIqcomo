@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
-class FranquiciadoController extends Controller
+use App\Http\Controllers\ApiController;
+class FranquiciadoController extends ApiController
 {
     /**
      * Display a listing of the resource.

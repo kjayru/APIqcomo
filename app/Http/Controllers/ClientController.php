@@ -13,20 +13,13 @@ class ClientController extends ApiController
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
+    { 
+       
         $clientes = User::where('role_id',2)->get();
         return $this->showAll($clientes);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
+   
 
     /**
      * Store a newly created resource in storage.
@@ -36,7 +29,27 @@ class ClientController extends ApiController
      */
     public function store(Request $request)
     {
-        //
+        
+        $rules = [
+            'name'=>'required',
+            'email'=>'required|email|unique:users',
+            'password'=>'required|min:6|confirmed',
+            'password_confirmation' => 'required'
+        ];
+
+        $this->validate($request, $rules);
+
+        $nuevo = $request->all();
+        $nuevo['role_id'] = User::ROLE;
+        $nuevo['password'] = bcrypt($request->password);
+        $nuevo['verified'] = User::USUARIO_NO_VERIFICADO;
+        $nuevo['varification_token'] = User::generarVerificationToken();
+        $nuevo['admin'] = User::USUARIO_REGULAR;
+
+
+        $usuario = User::create($nuevo);
+
+        return response()->json(['data'=>$usuario],201);
     }
 
     /**
@@ -47,19 +60,14 @@ class ClientController extends ApiController
      */
     public function show($id)
     {
-        //
+        
+         $cliente = User::find($id);
+
+         //return $this->showOne($cliente);
+         return response()->json(['data'=>$cliente]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
+    
 
     /**
      * Update the specified resource in storage.
@@ -70,7 +78,7 @@ class ClientController extends ApiController
      */
     public function update(Request $request, $id)
     {
-        //
+        dd('updates');
     }
 
     /**
@@ -81,6 +89,6 @@ class ClientController extends ApiController
      */
     public function destroy($id)
     {
-        //
+        dd('destroys');
     }
 }

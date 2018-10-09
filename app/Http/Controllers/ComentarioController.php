@@ -1,10 +1,10 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Http\Controllers\ApiController;
 use Illuminate\Http\Request;
 
-class ComentarioController extends Controller
+class ComentarioController extends ApiController
 {
     /**
      * Display a listing of the resource.

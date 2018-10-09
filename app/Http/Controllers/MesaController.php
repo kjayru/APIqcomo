@@ -1,10 +1,10 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Http\Controllers\ApiController;
 use Illuminate\Http\Request;
 
-class MesaController extends Controller
+class MesaController extends ApiController
 {
     /**
      * Display a listing of the resource.

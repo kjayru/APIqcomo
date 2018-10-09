@@ -1,10 +1,10 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Http\Controllers\ApiController;
 use Illuminate\Http\Request;
 
-class PerfilController extends Controller
+class PerfilController extends ApiController
 {
     /**
      * Display a listing of the resource.
