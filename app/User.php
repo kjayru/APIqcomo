@@ -2,6 +2,8 @@
 
 namespace App;
 
+use App\Transformers\UserTransformer;
+
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -17,6 +19,8 @@ class User extends Authenticatable
     const USUARIO_REGULAR = 'false';
     const ROLE = '2';
 
+
+    public $transformer = UserTransformer::class;
     protected $table = 'users';
     /**
      * The attributes that are mass assignable.

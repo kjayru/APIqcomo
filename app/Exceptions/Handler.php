@@ -26,12 +26,7 @@ class Handler extends ExceptionHandler
      * @var array
      */
     protected $dontReport = [
-        \Illuminate\Auth\AuthenticationException::class,
-        \Illuminate\Auth\Access\AuthorizationException::class,
-        \Symfony\Component\HttpKernel\Exception\HttpException::class,
-        \Illuminate\Database\Eloquent\ModelNotFoundException::class,
-        \Illuminate\Session\TokenMismatchException::class,
-        \Illuminate\Validation\ValidationException::class,
+       
     ];
 
     /**
@@ -54,57 +49,50 @@ class Handler extends ExceptionHandler
      * @param  \Exception  $exception
      * @return \Illuminate\Http\Response
      */
-    public function render($request, Exception $exception)
+     public function render($request, Exception $exception)
     {
-        //dd($exception);
-
-        if($exception instanceof ValidationException){
-            return $this->convertValidationExceptionToResponse($exception,$request);
-        }
-
-        if($exception instanceof ModelNotFoundException){
-            $modelo = $exception->getModel();
-            return $this->errorResponse('No existen niguna instancia  con el id especificado',404);
-        }
-
-        if($exception instanceof NotFoundHttpException){
-            //$modelo = $exception->getModel();
-            return $this->errorResponse('No se encontro la url especifica',404);  
-        }
-        
-        if(exception instanceof AuthenticationException){
-            return $this->unauthenticate($request,$exception);
-        }
-
-        if(exception instanceof AuthorizationException){
-            return $this->errorResponse('No tienes permiso para esta ejecución',403);
-        }
-
-        if(exception instanceof MethodNotAllowedHttpException){
-            return $this->errorResponse('El motedo no especificado no es valido',405);
-        }
-
-        if(exception instanceof HttpException){
-            return $this->errorResponse($exception->getMessage,$exception->getStatusCode());
-        }
-
-        if(exception instanceof QueryException){
-            $codigo = $exception->errorInfo[1];
-            if($codigo== 1451){
-                return $this->errorResponse('No se puede eliminar el recurso relacionado',409);
-            }
-            
-        }
-
-        if(config('app.debug')){
-            return parent::render($request,$exception);
-        }
-
-        //return parent::render($request, $exception);
-        return $this->errorResponse('Falla inespereda. Intente luego',500);
-        
+        $response = $this->handleException($request, $exception);
+        app(CorsService::class)->addActualRequestHeaders($response, $request);
+        return $response;
     }
-
+    public function handleException($request, Exception $exception)
+    {
+        if ($exception instanceof ValidationException) {
+            return $this->convertValidationExceptionToResponse($exception, $request);
+        }
+        if ($exception instanceof ModelNotFoundException) {
+            $modelo = strtolower(class_basename($exception->getModel()));
+            return $this->errorResponse("No existe ninguna instancia de {$modelo} con el id especificado", 404);
+        }
+        if ($exception instanceof AuthenticationException) {
+            return $this->unauthenticated($request, $exception);
+        }
+        if ($exception instanceof AuthorizationException) {
+            return $this->errorResponse('No posee permisos para ejecutar esta acción', 403);
+        }
+        if ($exception instanceof NotFoundHttpException) {
+            return $this->errorResponse('No se encontró la URL especificada', 404);
+        }
+        if ($exception instanceof MethodNotAllowedHttpException) {
+            return $this->errorResponse('El método especificado en la petición no es válido', 405);
+        }
+        if ($exception instanceof HttpException) {
+            return $this->errorResponse($exception->getMessage(), $exception->getStatusCode());
+        }
+        if ($exception instanceof QueryException) {
+            $codigo = $exception->errorInfo[1];
+            if ($codigo == 1451) {
+                return $this->errorResponse('No se puede eliminar de forma permamente el recurso porque está relacionado con algún otro.', 409);
+            }
+        }
+        if ($exception instanceof TokenMismatchException) {
+            return redirect()->back()->withInput($request->input());
+        }
+        if (config('app.debug')) {
+            return parent::render($request, $exception);            
+        }
+        return $this->errorResponse('Falla inesperada. Intente luego', 500);
+    }
     /**
      * Convert an authentication exception into an unauthenticated response.
      *
@@ -113,12 +101,12 @@ class Handler extends ExceptionHandler
      * @return \Illuminate\Http\Response
      */
     protected function unauthenticated($request, AuthenticationException $exception)
-    {  
-            return $this->errorResponse('no autenticado', 401);  
+    {
+        if ($this->isFrontend($request)) {
+            return redirect()->guest('login');
+        }
+        return $this->errorResponse('No autenticado.', 401);        
     }
-
-
-
     /**
      * Create a response object from the given validation exception.
      *
@@ -129,6 +117,16 @@ class Handler extends ExceptionHandler
     protected function convertValidationExceptionToResponse(ValidationException $e, $request)
     {
         $errors = $e->validator->errors()->getMessages();
-        return $this->errorResponse($errors,422);
+        if ($this->isFrontend($request)) {
+            return $request->ajax() ? response()->json($errors, 422) : redirect()
+                ->back()
+                ->withInput($request->input())
+                ->withErrors($errors);
+        }
+        return $this->errorResponse($errors, 422);
+    }
+    private function isFrontend($request)
+    {
+        return $request->acceptsHtml() && collect($request->route()->middleware())->contains('web');
     }
 }

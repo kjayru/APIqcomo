@@ -16,6 +16,7 @@ class ClientController extends ApiController
     { 
        
         $clientes = User::where('role_id',2)->get();
+       
         return $this->showAll($clientes);
     }
 
@@ -58,13 +59,13 @@ class ClientController extends ApiController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(User $cliente)
     {
         
-         $cliente = User::find($id);
+         //$cliente = User::find($id);
 
-         //return $this->showOne($cliente);
-         return response()->json(['data'=>$cliente]);
+         return $this->showOne($cliente);
+        // return response()->json(['data'=>$cliente]);
     }
 
     
@@ -76,9 +77,45 @@ class ClientController extends ApiController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, User $cliente)
     {
-        dd('updates');
+       
+        $reglas = [
+            'email'=>'required|email|unique:users,email'.$cliente->id,
+            'password'=>'min:6|confirmed',
+            'admin' => 'in:'.User::USUARIO_ADMINISTRADOR.','.User::USUARIO_REGULAR
+        ];
+
+        $this->validate($request,$reglas);
+
+        if($request->has('name')){
+            $cliente->name = $request->name;
+        }
+
+        if($request->has('email') && $cliente->email != $request->email){
+            $cliente->verified = User::USUARIO_NO_VERIFICADO;
+            $cliente->verification_token = User::generarVerificationToken();
+            $cliente->email = $request->email;
+        }
+
+        if($request->has('password')){
+            $cliente->password = bcrypt($request->password);
+        }
+
+        if($request->has('admin')){
+            if(!$cliente->esVerificado()){
+                return $this->errorResponse('Unicamente los usuarios verificados pueden cambiar su valor de administrador',409);
+            }
+            $cliente->admin = $request->admin;
+        }
+
+        if(!$cliente->isDirty()){
+            return $this->errorResponse('Se debe especificar al menos un valor diferente para actualizar',422);
+        }
+
+        $cliente->save();
+
+        return $this->showOne($cliente);
     }
 
     /**
@@ -87,8 +124,10 @@ class ClientController extends ApiController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(User $cliente)
     {
-        dd('destroys');
+        $user->delete();
+        
+        return $this->showOne($user);
     }
 }
