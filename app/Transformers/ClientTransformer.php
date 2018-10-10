@@ -27,7 +27,7 @@ class ClientTransformer extends TransformerAbstract
             'fotografia' => (string)$cliente->foto,
             
             'fechaCreacion' =>  (string)$cliente->created_at,
-            'fechaActualizacion' =><(string)$cliente->updated_at
+            'fechaActualizacion' =>(string)$cliente->updated_at,
         ];
     }
 }
