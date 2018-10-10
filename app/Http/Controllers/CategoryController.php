@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use App\Http\Controllers\ApiController;
 use Illuminate\Http\Request;
+use App\Category;
 
 class CategoryController extends ApiController
 {
@@ -11,9 +12,15 @@ class CategoryController extends ApiController
      *
      * @return \Illuminate\Http\Response
      */
+    public function __construct(){
+        $this->middleware('client.credentials')->only(['index','show']);
+        $this->middleware('auth.api')->except(['index','show']);
+    }
     public function index()
     {
-        //
+        $categories = Category::all();
+        return response()->json($categories);
+        //return $this->showAll($categories);
     }
 
     /**
@@ -23,7 +30,7 @@ class CategoryController extends ApiController
      */
     public function create()
     {
-        //
+        
     }
 
     /**

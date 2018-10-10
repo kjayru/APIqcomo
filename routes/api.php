@@ -41,6 +41,8 @@ Route::resource('perfiles','PerfilController',['only'=>['index','show']]);
 
 Route::resource('traducciones','TraduccionController',['only'=>['index','show']]);
 
-route::resource('categorias','CategoryController');
+route::resource('categorias','CategoryController',['only'=>['index','show']]);
+
+Route::post('oauth.token','\Laravel\Passport\Http\Controllers\AccessTokenController@issueToken');
 
 	
