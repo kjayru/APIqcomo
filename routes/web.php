@@ -11,12 +11,12 @@
 |
 */
 
+ 
 
 $this->get('login', 'Auth\LoginController@showLoginForm')->name('login');
 $this->post('login', 'Auth\LoginController@login');
 $this->post('logout', 'Auth\LoginController@logout')->name('logout');
-
-
+ 
 
 // Password Reset Routes...
 $this->get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.request');
@@ -29,6 +29,8 @@ Route::get('/home/my-clients', 'HomeController@getClients')->name('personal-clie
 Route::get('/home/authorized-clients', 'HomeController@getAuthorizedClients')->name('authorized-clients');
 Route::get('/home', 'HomeController@index')->name('home');
 
+
 Route::get('/',function(){
     return view('welcome');
 })->middleware('guest');
+ 

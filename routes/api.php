@@ -41,8 +41,12 @@ Route::resource('perfiles','PerfilController',['only'=>['index','show']]);
 
 Route::resource('traducciones','TraduccionController',['only'=>['index','show']]);
 
-route::resource('categorias','CategoryController',['only'=>['index','show']]);
+Route::resource('categorias','CategoryController',['only'=>['index','show']]);
 
 Route::post('oauth.token','\Laravel\Passport\Http\Controllers\AccessTokenController@issueToken');
+
+Route::get('/api/clasificaciones','ClassificationsController@index')->name('api.clasificaciones');
+
+Route::post('/api/register','RegistrationController@store')->name('api.register');
 
 	
