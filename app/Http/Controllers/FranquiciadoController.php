@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\ApiController;
+use App\Client;
+use App\Franchisee;
+
 class FranquiciadoController extends ApiController
 {
     /**
@@ -13,8 +15,23 @@ class FranquiciadoController extends ApiController
      */
     public function index()
     {
-        //
+        $franquiciados = Client::orderBy('id')->get();  
+        
+        foreach ($franquiciados as &$franquiciado)
+        {
+            $id_franchised = $franquiciado->franchise_id;
+            $result = Franchisee::where('id',$id_franchised)->first(); 
+            $franquiciado['classification_id'] = $result->classification_id;
+        }        
+        
+        return ['franquiciados'=>$franquiciados];
     }
+    
+    public function __construct()
+    {
+        $this->middleware('guest');
+    }
+    
 
     /**
      * Show the form for creating a new resource.
