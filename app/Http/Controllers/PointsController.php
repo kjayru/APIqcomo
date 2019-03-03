@@ -5,7 +5,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Point;
  
-class ClassificationsController extends Controller
+class PointsController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -99,7 +99,7 @@ class ClassificationsController extends Controller
     public function mispuntos($id)
     {
         //
-        $points = Point::where('user_id', $id)->sortBy('id')->get();
+        $points = Point::where('user_id', $id)->get();
         return ['points'=>$points];
     }
 }

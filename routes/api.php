@@ -49,4 +49,8 @@ Route::get('/api/clasificaciones','ClassificationsController@index')->name('api.
 
 Route::post('/api/register','RegistrationController@store')->name('api.register');
 
+Route::get('/api/franquiciado_estuve/{id}','SalesController@estuve')->name('api.sales_estuve');
+
+Route::get('/api/mispuntos/{id}','PointsController@mispuntos')->name('api.mispuntos');
+
 	
