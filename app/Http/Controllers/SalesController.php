@@ -108,7 +108,7 @@ class SalesController extends Controller
     {
         //
         $franquiciados = [];
-        $sales = Sale::orderBy('id')->get();
+        $sales = Sale::where('user_id',$id);
         foreach ($sales as $sale)
         {
             $client_id = $sale->client_id;
