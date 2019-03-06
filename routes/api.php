@@ -52,5 +52,9 @@ Route::post('/api/register','RegistrationController@store')->name('api.register'
 Route::get('/api/franquiciado_estuve/{id}','SalesController@estuve')->name('api.sales_estuve');
 
 Route::get('/api/mispuntos/{id}','PointsController@mispuntos')->name('api.mispuntos');
+Route::get('/api/regalos/{id}','GiftsController@misregalos')->name('api.regalos');
+Route::get('/api/reservas/{id}','BookingController@misreservas')->name('api.reservas');
+Route::get('/api/pedidos/{id}','SalesController@mispedidos')->name('api.pedidos');
+Route::get('/api/cupones/{id}','CouponsController@miscupones')->name('api.cupones');
 
 	
