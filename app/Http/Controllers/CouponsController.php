@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Coupon;
 use App\CouponUser;
+use App\Client;
  
 class CouponsController extends Controller
 {
@@ -126,9 +127,17 @@ class CouponsController extends Controller
         $coupons_user = CouponUser::where('user_id', $id)->get();
         $out = [];
         foreach ($coupons_user as $coupon_user)
-        {
+        { 
+            $franchiseed_id = $coupon_user->client_id;
+            $result_franchiseed = Client::where('id',$franchiseed_id)->first();
+            
             $idcoupon = $coupon_user->idcoupon;
             $result = Coupon::where('id',$idcoupon)->first();
+            
+            $result['logo' ] = $result_franchiseed->logo;
+            $result['latitude' ] = $result_franchiseed->latitude;
+            $result['longitude' ] = $result_franchiseed->longitude;
+            
             $out[] = $result;
         }
         
