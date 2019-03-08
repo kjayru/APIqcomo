@@ -57,4 +57,10 @@ Route::get('/api/reservas/{id}','BookingController@misreservas')->name('api.rese
 Route::get('/api/pedidos/{id}','SalesController@mispedidos')->name('api.pedidos');
 Route::get('/api/cupones/{id}','CouponsController@miscupones')->name('api.cupones');
 
+Route::get('/franquiciado/detaill_franchised/{id}','ClientController@getDetailRestaurante')->name('api.detaillrestaurant');
+Route::get('/api/puntajes/{id}','ClientsComentariosController@getResumenPuntajes')->name('api.puntajes');
+
+
+
+
 	
