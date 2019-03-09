@@ -14,6 +14,10 @@ use App\ClientService;
 use App\Service;
 use App\Configuration;
 use App\ClientsComentario;
+use App\ClientHorario;
+use App\ClientPolitica;
+use App\ClientSubtipoComida;
+
 class ClientController extends Controller
 {
     public function __construct()
@@ -314,7 +318,10 @@ class ClientController extends Controller
          
         $service = ClientService::where('client_id',$id)->get();
         $clientPhoto = ClientPhoto::where('client_id',$id)->get();
-        $puntajes = ClientsComentario::where('client_id',$id)->get()->take(500);
+        $clientHorarios = ClientHorario::where('client_id',$id)->first();
+        $clientPolitica = ClientPolitica::where('client_id',$id)->first();
+        $clientSubtiposComida = ClientSubtipoComida::where('client_id',$id)->get();
+        $puntajes = ClientsComentario::where('client_id',$id)->get()->take(250);
         if( $puntajes == null ){
             return ['puntajes'=>[]];
         }
@@ -370,19 +377,63 @@ class ClientController extends Controller
         $points[] = ['valor'=>3,'cantidad'=>$p_3];
         $points[] = ['valor'=>4,'cantidad'=>$p_4];
         $points[] = ['valor'=>5,'cantidad'=>$p_5];
-         
-        $response = [];
-        $response['puntajes'] = $points; //TODO
-        $response['fotos'] = $clientPhoto;
-        $response['horarios'] = []; //TODO
         
-        $response['tipos_comida'] = []; //TODO
+        $arrHorarios = [];
+        if( $clientHorarios != null ){
+            $item['inicio'] = $clientHorarios->domingo_inicio;
+            $item['final'] = $clientHorarios->domingo_final;
+            $item['id_dia'] = 0;
+            $arrHorarios[] = $item;
+
+            $item1['inicio'] = $clientHorarios->lunes_inicio;
+            $item1['final'] = $clientHorarios->lunes_final;
+            $item1['id_dia'] = 1;
+            $arrHorarios[] = $item1;
+
+            $item2['inicio'] = $clientHorarios->martes_inicio;
+            $item2['final'] = $clientHorarios->martes_final;
+            $item2['id_dia'] = 2;
+            $arrHorarios[] = $item2;
+
+            $item3['inicio'] = $clientHorarios->miercoles_inicio;
+            $item3['final'] = $clientHorarios->miercoles_final;
+            $item3['id_dia'] = 3;
+            $arrHorarios[] = $item3;
+
+            $item4['inicio'] = $clientHorarios->jueves_inicio;
+            $item4['final'] = $clientHorarios->jueves_final;
+            $item4['id_dia'] = 4;
+            $arrHorarios[] = $item4;
+
+            $item5['inicio'] = $clientHorarios->viernes_inicio;
+            $item5['final'] = $clientHorarios->viernes_final;
+            $item5['id_dia'] = 5;
+            $arrHorarios[] = $item5;
+
+            $item6['inicio'] = $clientHorarios->sabado_inicio;
+            $item6['final'] = $clientHorarios->sabado_final;
+            $item6['id_dia'] = 6;
+            $arrHorarios[] = $item6;
+        }
+
+        $response = [];
+        $response['puntajes'] = $points; 
+        $response['fotos'] = $clientPhoto;
+        $response['horarios'] = $arrHorarios;
+        
+        $response['tipos_comida'] = $clientSubtiposComida;
         $response['caracteristicas'] = $service;
         $response['comentarios'] = $comentarios;
         
-        $response['precios'] = "10$ a 20$"; //TODO
-        $response['url'] = "www.sampleweb.com";
-        $response['politicas'] = "Puede cancelar el pedido dos horas antes de llegado la hora";
+        if( $clientPolitica != null ){
+            $response['precios'] = $clientPolitica->rango_precios; 
+            $response['url'] = $clientPolitica->webpage;
+            $response['politicas'] = $clientPolitica->politicas;
+        }else{
+            $response['precios'] = "no hay informacion"; 
+            $response['url'] = "no hay informacion";
+            $response['politicas'] = "no hay informacion";
+        }
         
         return response()->json($response);
     }
