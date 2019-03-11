@@ -61,6 +61,9 @@ class RegistrationController extends ApiController
                 $avatar = $request->file('foto')->store('users');
                 $path_foto = $avatar;
             }
+            else{
+                $path_foto = $request->foto;
+            }
             
             $created_user = User::create([
                 'name' => $request->name,
