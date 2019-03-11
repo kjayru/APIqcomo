@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\User; 
+use App\RoleUser; 
  
 class RegistrationController extends ApiController
 {
@@ -67,6 +68,11 @@ class RegistrationController extends ApiController
                 'email' => $request->email,
                 'foto' => $path_foto,
                 'password' => bcrypt($request->password),
+            ]);
+
+            $role_user = RoleUser::create([
+                'role_id' => 5,
+                'user_id' => $created_user->id
             ]);
             
             $ac = new AuthController();
