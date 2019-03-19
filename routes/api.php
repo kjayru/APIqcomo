@@ -13,6 +13,8 @@ use Illuminate\Http\Request;
 |
 */
 
+Route::get('users', 'UserController@index')->name('api.users');
+/*
 Route::resource('cuadro-de-comandos','ComandoController',['only'=>['index','show']]);
 
 Route::resource('franquiciado','FranquiciadoController',['only'=>['index','show']]);
@@ -42,6 +44,8 @@ Route::resource('perfiles','PerfilController',['only'=>['index','show']]);
 Route::resource('traducciones','TraduccionController',['only'=>['index','show']]);
 
 Route::resource('categorias','CategoryController',['only'=>['index','show']]);
+*/
+
 
 Route::post('oauth.token','\Laravel\Passport\Http\Controllers\AccessTokenController@issueToken');
 

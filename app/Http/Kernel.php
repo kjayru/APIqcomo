@@ -18,6 +18,7 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
+        \App\Http\Middleware\TrustProxies::class,
     ];
 
     /**
@@ -59,6 +60,9 @@ class Kernel extends HttpKernel
         'client.credentials' => \Laravel\Passport\Http\Middleware\CheckClientCredentials::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'throttle' => \App\Http\Middleware\CustomThrottleRequest::class,
+        'scope'=>\Laravel\Passport\Http\Middleware\CheckForAnyScope::class,
+        'scopes' => \Laravel\Passport\Http\Middleware\CheckScopes::class,
         'signature' => \App\Http\Middleware\signatureMiddleware::class,
+        'transform.input'=>\App\Http\Middleware\TransformInput::class,
     ];
 }
