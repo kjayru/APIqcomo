@@ -23,13 +23,8 @@ class ClientController extends ApiController
 {
     public function __construct()
     {
-        $this->middleware('client.credentials')->only(['index','store', 'resend']);
         $this->middleware('auth:api')->except(['index','store', 'verify', 'resend']);
-        $this->middleware('transform.input:' . UserTransformer::class)->only(['index','store', 'update']);
-        $this->middleware('scope:manage-account')->only(['show', 'update']);
-        $this->middleware('can:view,user')->only('show');
-        $this->middleware('can:update,user')->only('update');
-        $this->middleware('can:delete,user')->only('destroy');
+        $this->middleware('transform.input:' . ClientTransformer::class)->only(['index','store', 'update']);
     }
     /**
      * Display a listing of the resource.
@@ -41,13 +36,17 @@ class ClientController extends ApiController
         
         //$users = CustomerDetail::all();
         //$clientes = RestaurantDetail::where('customer_detail_id',$user->id)->get();
-        $clientes = Client::all();
+        /*$clientes = Client::all();
         $franchises = Franchise::all();
         $services = Service::all();
         
         $configurations = Configuration::all();
         return view('admin.paginas.clientes.index',['clients'=>$clientes,'franchises'=>$franchises,'services'=>$services,'configurations'=>$configurations]);
-    
+       */
+
+      $clients = Client::all();
+      return $this->showAll($clients);
+
     }
     
     /**
