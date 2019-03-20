@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 */
 
 Route::get('users', 'UserController@index')->name('api.users');
+Route::get('franquicias', 'FranchiseController@index')->name('api.franchise');
 /*
 Route::resource('cuadro-de-comandos','ComandoController',['only'=>['index','show']]);
 

@@ -25,11 +25,13 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 	protected function showAll(Collection $collection, $code = 200)
 	{
+		
 		if ($collection->isEmpty()) {
 			return $this->successResponse(['data' => $collection], $code);
 		}
+		
 		$transformer = $collection->first()->transformer;
-
+		
 		$collection = $this->filterData($collection, $transformer);
 		$collection = $this->sortData($collection, $transformer);
 		

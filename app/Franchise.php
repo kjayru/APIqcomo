@@ -3,11 +3,16 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Transformers\FranchiseTransformer;
 
 class Franchise extends Model
 {
-    protected $table = "franchisees";
+    public $transformer = FranchiseTransformer::class;
+    protected $table = "franchises";
    
+    protected $fillable = [
+        'id','names','address', 'city', 'province','cellphone','mail', 'avatar','status','package_id','user_id','classification_id','created_at','updated_at'
+     ];
     public function Clients(){
         return $this->hasMany('App\Client');
     }

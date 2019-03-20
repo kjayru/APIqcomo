@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\ApiController;
 use Illuminate\Support\Facades\Auth;
+
 use App\User;
 use App\Client;
 use App\Franchise; 
@@ -18,11 +19,17 @@ use App\ClientHorario;
 use App\ClientPolitica;
 use App\ClientSubtipoComida;
 
-class ClientController extends Controller
+class ClientController extends ApiController
 {
     public function __construct()
     {
-        $this->middleware('guest');
+        $this->middleware('client.credentials')->only(['index','store', 'resend']);
+        $this->middleware('auth:api')->except(['index','store', 'verify', 'resend']);
+        $this->middleware('transform.input:' . UserTransformer::class)->only(['index','store', 'update']);
+        $this->middleware('scope:manage-account')->only(['show', 'update']);
+        $this->middleware('can:view,user')->only('show');
+        $this->middleware('can:update,user')->only('update');
+        $this->middleware('can:delete,user')->only('destroy');
     }
     /**
      * Display a listing of the resource.
@@ -40,6 +47,7 @@ class ClientController extends Controller
         
         $configurations = Configuration::all();
         return view('admin.paginas.clientes.index',['clients'=>$clientes,'franchises'=>$franchises,'services'=>$services,'configurations'=>$configurations]);
+    
     }
     
     /**
