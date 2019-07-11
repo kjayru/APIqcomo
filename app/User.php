@@ -4,6 +4,7 @@ namespace App;
 
 use Laravel\Passport\HasApiTokens;
 use App\Transformers\UserTransformer;
+use App\UserClientAdmin;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -12,7 +13,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
-    use Notifiable, HasApiTokens;
+    use Notifiable;
 
     const USUARIO_VERIFICADO = '1';
     const USUARIO_NO_VERIFICADO = '0';
@@ -29,7 +30,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-       'role_id','name','lastname', 'email', 'telefono','sexo','edad', 'password','foto',
+       'role_id','name','lastname', 'email', 'telefono','sexo','edad', 'password',
     ];
 
 
@@ -81,4 +82,19 @@ class User extends Authenticatable
         return str_random(40);
     }
 
+    public function comentarios()
+    {
+        return $this->hasMany('App\Comment');
+    }
+
+    public function sales()
+    {
+        return $this->hasMany('App\Sale');
+    }
+
+    public function userClientAdmin()
+    {
+        return $this->hasMany('App\Client');
+    }
+    
 }

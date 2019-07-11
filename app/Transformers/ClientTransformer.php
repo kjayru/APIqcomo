@@ -4,6 +4,7 @@ namespace App\Transformers;
 
 use App\Client;
 use League\Fractal\TransformerAbstract;
+use App\Franchise; 
 
 class ClientTransformer extends TransformerAbstract
 {
@@ -14,6 +15,9 @@ class ClientTransformer extends TransformerAbstract
      */
     public function transform(Client $client)
     {
+
+        $idf = $client->franchise_id;
+        $franchisee = Franchise::where('id',$idf)->first();
 
         return [
             'cliente_id' => (int)$client->id,
@@ -29,9 +33,17 @@ class ClientTransformer extends TransformerAbstract
             'sexo' => (string)$client->sexo,
             'cajero'=> (string)$client->cashier,
             'logo' => (string)$client->logo,
-            'latitud'=>(string)$client->latitude,
-            'longitud'=>(string)$client->longitude,
-            'estado'=>(string)$client->status,         
+            'latitud'=>(double)$client->latitude,
+            'longitud'=>(double)$client->longitude, 
+            'numero_mesas'=>(int)$client->numesas,  
+            'estado'=>(int)$client->status,       
+            'foto1'=>(string)$client->foto1,       
+            'foto2'=>(string)$client->foto2,       
+            'foto3'=>(string)$client->foto3,       
+            'foto4'=>(string)$client->foto4,      
+            'id_paquete'=>(int)$client->package_id,    
+            'likes'=>(int)$client->likes,    
+            'clasificacion_id'=> $franchisee->classification_id,   
             'fechaCreacion' =>  (string)$client->created_at,
             'fechaActualizacion' =>(string)$client->updated_at,
         ];
@@ -55,7 +67,15 @@ class ClientTransformer extends TransformerAbstract
             'logo' =>  'logo',
             'latitud'=> 'latitude',
             'longitud'=> 'longitude',
-            'estado'=> 'status',         
+            'numero_mesas'=> 'numesas',
+            'estado'=> 'status',  
+            'foto1'=> 'foto1',
+            'foto2'=> 'foto2',
+            'foto3'=> 'foto3',
+            'foto4'=> 'foto4',   
+            'likes'=> 'likes',     
+            'paquete_id'=> 'package_id',  
+            'clasificacion_id'=> 'classification_id',     
             'fechaCreacion' =>  'created_at',
             'fechaActualizacion' => 'updated_at',
         ];
@@ -80,7 +100,15 @@ class ClientTransformer extends TransformerAbstract
             'logo' =>  'logo',
             'latitude'=> 'latitud',
             'longitude'=> 'longitud',
-            'status'=> 'estado',         
+            'numesas'=> 'numero_mesas',
+            'status'=> 'estado',
+            'foto1'=> 'foto1',
+            'foto2'=> 'foto2',
+            'foto3'=> 'foto3',
+            'foto4'=> 'foto4',
+            'likes'=> 'likes',     
+            'package_id'=> 'paquete_id',   
+            'classification_id'=> 'clasificacion_id',     
             'created_at' =>  'fechaCreacion',
             'updated_at' => 'fechaActualizacion',
         ];

@@ -132,12 +132,39 @@ class CouponsController extends Controller
             $result_franchiseed = Client::where('id',$franchiseed_id)->first();
             
             $idcoupon = $coupon_user->idcoupon;
-            $result = Coupon::where('id',$idcoupon)->first();
+            $item = Coupon::where('id',$idcoupon)->first();
             
-            $result['logo' ] = $result_franchiseed->logo;
+            $result = $item;
+            $result['logo' ] = $result_franchiseed->cover;
             $result['latitude' ] = $result_franchiseed->latitude;
             $result['longitude' ] = $result_franchiseed->longitude;
             
+            $out[] = $result;
+        }
+        
+        return ['cupones'=>$out];
+    }
+
+    /**
+     * Get the list of point for id
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function allcupones()
+    {
+        //
+        $coupons = Coupon::all(); 
+        $out = [];
+        foreach ($coupons as $cupon)
+        { 
+            $franchiseed_id = $cupon->client_id;
+            $result_franchiseed = Client::where('id',$franchiseed_id)->first();
+
+            $result = $cupon;
+            $result['logo' ] = $result_franchiseed->cover;
+            $result['latitude' ] = $result_franchiseed->latitude;
+            $result['longitude' ] = $result_franchiseed->longitude;
             $out[] = $result;
         }
         

@@ -126,11 +126,11 @@ class GiftsController extends Controller
         $out = [];
         foreach ($gifts_user as $gift_user)
         {
-            $idgift = $gift_user->idgift;
+            $idgift = $gift_user->gift_id;
             $result = Gift::where('id',$idgift)->first();
             $out[] = $result;
         }
         
-        return ['clasificaciones'=>$out];
+        return ['data'=>$out];
     }
 }

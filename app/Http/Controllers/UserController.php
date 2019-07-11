@@ -97,4 +97,18 @@ class UserController extends ApiController
     {
         //
     }
+
+    /**
+     * agrega el numero telefonico del usuario
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function addCellphone($request)
+    { 
+        $user = User::find($request->user_id);
+        $user->telefono = $request->cellphone;
+        $user->save();
+        return response()->json(['rpta'=>'ok']);
+    }
 }

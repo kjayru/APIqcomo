@@ -102,4 +102,21 @@ class PointsController extends Controller
         $points = Point::where('user_id', $id)->get();
         return ['points'=>$points];
     }
+
+    /**
+     * Devuelve la informacion basica que se mostrara en el app
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function puntajes_single($c, $u)
+    {  
+        $puntos = Point::where([
+            ['client_id', '=', $c],
+            ['user_id', '=', $u],
+        ])->get(); 
+        $out["puntos"] = $puntos;
+        $out["rpta"] = "ok";
+        return response()->json($out); 
+    }
 }

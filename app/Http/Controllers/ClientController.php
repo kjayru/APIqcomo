@@ -9,22 +9,25 @@ use Illuminate\Support\Facades\Auth;
 use App\User;
 use App\Client;
 use App\Franchise; 
-use App\ClientPhoto;
-use App\ClientConfiguration;
-use App\ClientService;
+use App\ClientConfiguration; 
 use App\Service;
 use App\Configuration;
-use App\ClientsComentario;
-use App\ClientHorario;
-use App\ClientPolitica;
 use App\ClientSubtipoComida;
+use App\Mozo;
+use App\ClientPhoto;
+use App\ClientPolitica;
+use App\ClientHorario;
+use App\ClientService;
+use App\Comment; 
+use App\UserFranchiseedLike;
+
 
 class ClientController extends ApiController
 {
     public function __construct()
     {
-        $this->middleware('auth:api')->except(['index','store', 'verify', 'resend']);
-        $this->middleware('transform.input:' . ClientTransformer::class)->only(['index','store', 'update']);
+        //$this->middleware('auth:api')->except(['index','store', 'verify', 'resend']);
+        //$this->middleware('transform.input:' . ClientTransformer::class)->only(['index','store', 'update']);
     }
     /**
      * Display a listing of the resource.
@@ -44,9 +47,10 @@ class ClientController extends ApiController
         return view('admin.paginas.clientes.index',['clients'=>$clientes,'franchises'=>$franchises,'services'=>$services,'configurations'=>$configurations]);
        */
 
-      $clients = Client::all();
-      return $this->showAll($clients);
-
+        $clients = Client::all(); 
+        $clientsFilter = $this->showAll($clients,'App\Transformers\ClientTransformer');
+        //return ['data'=>$final]; 
+        return $clientsFilter; 
     }
     
     /**
@@ -185,7 +189,6 @@ class ClientController extends ApiController
         $client->longitude = $request->longitude;
         
         $client->save();
-        
         return response()->json(['rpta' => 'ok']);
     }
     
@@ -445,5 +448,161 @@ class ClientController extends ApiController
         return response()->json($response);
     }
     
+
+    /**
+     * Devuelve el id_mozo y el id_restaurante
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function inside_restaurante($id)
+    { 
+        $out = [];
+        $personal = Mozo::where("client_id", $id)->get();
+        foreach( $personal as $trabajador){
+
+            // ejemplo busca al mozo que esta libre
+            // si nadie esta libre?
+            if( $trabajador->status == 1 ){
+                $out["mozo_id"] = $trabajador->id;
+                break;
+            }
+        }
+
+        //TODO envia estadistica de visitas al restaurante
+
+
+        $out["id_restaurante"] = $id;
+        $out["rpta"] = "ok";
+        return response()->json($out); 
+    }
+
+    /**
+     * Devuelve la informacion basica que se mostrara en el app
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function franquicia_basic($id)
+    { 
+        $franchise = Client::where("id", $id)->first(); 
+        $out["franchised"] = $this->showOne($franchise);
+        $out["rpta"] = "ok";
+        return response()->json($out); 
+    }
+
+    /**
+     * Devuelve la informacion basica que se mostrara en el app
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function photos_restaurante($id)
+    { 
+        $client_photos = ClientPhoto::where("client_id", $id)->get(); 
+        $out["data"] = $client_photos;
+        $out["rpta"] = "ok";
+        return response()->json($out); 
+    }
+    
+    /**
+     * Devuelve la informacion basica que se mostrara en el app
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function politicas_restaurante($id)
+    { 
+        $client_politicas = ClientPolitica::where("client_id", $id)->first(); 
+        $out["data"] = $client_politicas;
+        $out["rpta"] = "ok";
+        return response()->json($out); 
+    }
+
+    /**
+     * Devuelve la informacion basica que se mostrara en el app
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function horarios_restaurante($id)
+    { 
+        $client_horario = ClientHorario::where("client_id", $id)->get(); 
+        $out["data"] = $client_horario;
+        $out["rpta"] = "ok";
+        return response()->json($out); 
+    }
+
+    /**
+     * Devuelve la informacion basica que se mostrara en el app
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function services_restaurante($id)
+    { 
+        $client_service = ClientService::where("client_id", $id)->get(); 
+        $client2 = [];
+        foreach( $client_service as $myservice ){ 
+            $item = $myservice;
+            $service = Service::where('id', $myservice->service_id)->first();
+            $item['name'] = $service->name;
+            $client2[] = $item;
+        }
+
+        $out["data"] = $client2; 
+        $out["rpta"] = "ok";
+        return response()->json($out); 
+    }
+
+    /**
+     * Devuelve la informacion basica que se mostrara en el app
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function resenias_restaurante($id)
+    { 
+        $client_comentarios = Comment::where("client_id", $id)->get(); 
+        $client2 = [];
+        foreach( $client_comentarios as $comentario ){ 
+            $item = $comentario;
+            $user = User::where('id', $comentario->user_id)->first();
+            $item['user'] = $user;
+            $client2[] = $item;
+        }
+ 
+        $out["data"] = $client2;
+        $out["rpta"] = "ok";
+        return response()->json($out); 
+    }
+
+
+    /**
+     * Guarda en la table de usuario_plato_likes y se cuenta en la table de client columna like
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function like(Request $request)
+    { 
+        //tabla client like
+        $client = Client::where("id", $request->restaurant_id)->first(); 
+        $client->likes = $client->likes + 1;
+        $client->save();
+        $out["rpta"] = "ok";
+
+        //table usuario_franquiciado_likes
+        $platolike = new UserFranchiseedLike();
+        $platolike->iduser = $request->user_id;
+        $platolike->idclient = $request->restaurant_id;
+        $platolike->estado = 1;
+        $platolike->save();
+
+        return response()->json($out); 
+    }
+
+
+
 }
 

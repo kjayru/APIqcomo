@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use App\User; 
 use App\RoleUser; 
  
@@ -45,14 +46,19 @@ class RegistrationController extends ApiController
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        $email = $request->email;
-        $user_find = User::where('email',$email)->first();
+    { 
+        $credentials = $request->only('email', 'password');
         
-        if( $user_find != null ){
-            $ac = new AuthController();
-            $token = $ac->login($request);
-            return response()->json(['rpta'=>'ok', 'user'=>$user_find, 'token'=>$token]);
+        if (Auth::attempt($credentials)) {
+            $user = Auth::user();
+            $id = Auth::id();  
+            $token = Str::random(60);
+    
+            $request->user()->forceFill([
+                'remember_token' => hash('sha256', $token),
+            ])->save();
+    
+            return response()->json(['rpta'=>'ok', 'user'=>$user, 'token'=>$token]);
         }
         else{
             
@@ -71,6 +77,7 @@ class RegistrationController extends ApiController
                 'email' => $request->email,
                 'foto' => $path_foto,
                 'password' => bcrypt($request->password),
+                'remember_token' => Str::random(60),
             ]);
 
             $role_user = RoleUser::create([
@@ -84,7 +91,8 @@ class RegistrationController extends ApiController
         }
          
     }
-    
+ 
+
     /**
      * Display the specified resource.
      *

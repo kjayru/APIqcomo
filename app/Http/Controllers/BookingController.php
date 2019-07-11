@@ -49,10 +49,11 @@ class BookingController extends Controller
         $booking->day = $request->day;
         $booking->star = $request->star;
         $booking->end = $request->end;
-        $booking->sector_id = $request->sector_id;
-        $booking->mesa_id = $request->mesa_id;
+        //$booking->sector_id = $request->sector_id;
+        //$booking->mesa_id = $request->mesa_id;
         $booking->user_id = $request->user_id;
-        $booking->state = $request->state; 
+        $booking->bookingstate_id = $request->bookingstate_id;  
+        $booking->client_id = $request->client_id;
         $booking->save(); 
         return response()->json(['rpta'=>'ok']);
     }
@@ -128,5 +129,23 @@ class BookingController extends Controller
         }
         
         return ['reservas'=>$out];
+    }
+
+    /**
+     * Cancela un pedido
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function cancelar(Request $request)
+    {
+        $booking = Booking::find($request->id); 
+        $booking->bookingstate_id = 4; 
+        $booking->save();
+
+        //TODO enviar notificacion
+
+        return response()->json(['rpta'=>'ok']);
     }
 }

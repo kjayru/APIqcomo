@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\ClientsComentario;
+use App\Comment;
 use App\User;
 
 class ClientsComentariosController extends Controller
@@ -101,7 +101,7 @@ class ClientsComentariosController extends Controller
      */
     public function getResumenPuntajes($id)
     {
-        $puntajes = ClientsComentario::where('client_id', $id)->get()->take(500);;
+        $puntajes = Comment::where('client_id', $id)->get()->take(500);
         $points = [];
         $p_0 = 0;
         $p_1 = 0;
@@ -115,7 +115,7 @@ class ClientsComentariosController extends Controller
         }
          
         foreach ($puntajes as $puntaje) { 
-            switch($puntaje->puntuacion){
+            switch($puntaje->score){
                 case 0:
                     $p_0 += 1;
                     break;
