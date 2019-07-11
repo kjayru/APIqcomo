@@ -65,8 +65,7 @@ class BookingController extends Controller
             $item[] = $subitem;
         }
 
-        $reservas=$item;    
-        $reservas[] = $reserva; 
+        $reservas=$item;      
          
         return response()->json(["rpta"=>"ok", "msg"=>"",'reservas'=>$reservas, "clients"=>$clients, "sectors"=>$sectors]); 
     }
