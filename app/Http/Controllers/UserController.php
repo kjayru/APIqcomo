@@ -13,7 +13,7 @@ class UserController extends ApiController
     public function __construct()
     {
         $this->middleware('client.credentials')->only(['index','store', 'resend']);
-        $this->middleware('auth:api')->except(['index','store', 'verify', 'resend']);
+        $this->middleware('auth:api')->except(['index','store', 'verify', 'resend','addCellphone']);
         $this->middleware('transform.input:' . UserTransformer::class)->only(['index','store', 'update']);
         $this->middleware('scope:manage-account')->only(['show', 'update']);
         $this->middleware('can:view,user')->only('show');
@@ -104,7 +104,7 @@ class UserController extends ApiController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function addCellphone($request)
+    public function addCellphone(Request $request)
     { 
         $user = User::find($request->user_id);
         $user->telefono = $request->cellphone;

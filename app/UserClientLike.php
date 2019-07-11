@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class UserClientLike extends Model
 {
-    protected $table = 'user_client_like';
+    protected $table = 'user_client_likes';
 
     public function user()
     {

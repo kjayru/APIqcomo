@@ -172,11 +172,11 @@ Route::post('/api/cel_activo','UserActivoController@store')->name('api.user_acti
 Route::post('/api/registrar_visita','ClientVisitaController@store')->name('api.registrar_visita.store');
 
 //ver mesas disponibles
-Route::get('/api/mesas/enabled/{sector_id}/{dia}/{h0}/{hf}','Admin\MesaController@enabled')->name('mesas.create')
+Route::get('/api/mesas/enabled/{sector_id}/{dia}/{h0}/{hf}','MesaController@enabled')->name('mesas.create')
 /*->middleware('permission:mesas.enabled')*/;
  
 //obtiene lista de sectores
-Route::get('/api/sector/{client}','Admin\SectorController@fromClient')->name('sector.client');
+Route::get('/api/sector/{client}','SectorController@fromClient')->name('sector.client');
 
 //añade el numero telefonico del usuario
-Route::post('/api/user/addcellphone','Admin\UserController@addCellphone')->name('user.cellphone');
+Route::post('/api/user/addcellphone','UserController@addCellphone')->name('user.cellphone');

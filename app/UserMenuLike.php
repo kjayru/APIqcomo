@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class UserMenuLike extends Model
 {
-    protected $table = 'userclient_points'; 
+    protected $table = 'user_menu_likes'; 
 
     public function user()
     {
