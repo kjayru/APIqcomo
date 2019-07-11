@@ -23,49 +23,6 @@ class BookingController extends Controller
      */
     public function index()
     {
-        $from = date('Y-m-d');
-        $reservas = [];        
-
-        //segun el tipo de rol
-        $user_id = Auth::id();
-        $user = User::where('id', $user_id)->first(); 
-         
-        $clients = [];
-        $sectors = [];  
-
-        //reservas del dia         
-        $temp = Booking::where('user_id',$user_id)->whereDate('day','>=',$from)->get(); 
-    
-        $item = [];
-        foreach($temp as $subtemp){    
-            $subitem = $subtemp;
-            $user_booking = $subtemp->user;
-            $subitem['name'] = $user_booking->name;
-            if( empty($user_booking->telefono) ){
-                $subitem['cellphone'] = 'no especificado';        
-            } else{
-                $subitem['cellphone'] = $user_booking->telefono;
-            } 
-
-            $booking_sector = BookingSector::where('booking_id',$subtemp->id)->first(); 
-
-            if( empty($booking_sector) ){
-                $subitem['sector'] = 'no especificado';  
-            } else{
-                $subitem['sector'] = $booking_sector->sector->name;
-            }
-            if( empty($subtemp->estado) ){
-                $subitem['estado'] = 'no especificiado';
-            }else{
-                $subitem['estado'] = $subtemp->estado->name;
-            }
-            $item[] = $subitem;
-        }
-
-        $reservas=$item;      
-         
-        return response()->json(["rpta"=>"ok", "msg"=>"",'reservas'=>$reservas, 
-            "clients"=>$clients, "sectors"=>$sectors, "user_id"=>$user_id,'from'=>$from]); 
     }
 
     /**
@@ -173,4 +130,59 @@ class BookingController extends Controller
         $booking->save(); 
         return response()->json(["rpta"=>"ok", "msg"=>"La reserva se cancelo"]);
     }
+
+    /**
+     * muestra mis reservas como usuario
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function misreservas($id)
+    {
+        $from = date('Y-m-d');
+        $reservas = [];        
+
+        //segun el tipo de rol
+        $user_id = $id;
+        $user = User::where('id', $user_id)->first(); 
+         
+        $clients = [];
+        $sectors = [];  
+
+        //reservas del dia         
+        $temp = Booking::where('user_id',$user_id)->whereDate('day','>=',$from)->get(); 
+    
+        $item = [];
+        foreach($temp as $subtemp){    
+            $subitem = $subtemp;
+            $user_booking = $subtemp->user;
+            $subitem['name'] = $user_booking->name;
+            if( empty($user_booking->telefono) ){
+                $subitem['cellphone'] = 'no especificado';        
+            } else{
+                $subitem['cellphone'] = $user_booking->telefono;
+            } 
+
+            $booking_sector = BookingSector::where('booking_id',$subtemp->id)->first(); 
+
+            if( empty($booking_sector) ){
+                $subitem['sector'] = 'no especificado';  
+            } else{
+                $subitem['sector'] = $booking_sector->sector->name;
+            }
+            if( empty($subtemp->estado) ){
+                $subitem['estado'] = 'no especificiado';
+            }else{
+                $subitem['estado'] = $subtemp->estado->name;
+            }
+            $item[] = $subitem;
+        }
+
+        $reservas=$item;      
+         
+        return response()->json(["rpta"=>"ok", "msg"=>"",'reservas'=>$reservas, 
+            "clients"=>$clients, "sectors"=>$sectors, 'from'=>$from]); 
+    }
+
+    
 }
