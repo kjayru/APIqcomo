@@ -175,6 +175,8 @@ class BookingController extends Controller
             }else{
                 $subitem['estado'] = $subtemp->estado->name;
             }
+
+            $subitem['franchised'] = Franchise::where('id',$subtemp->client_id)->first(); 
             $item[] = $subitem;
         }
 
