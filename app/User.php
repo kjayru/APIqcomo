@@ -13,7 +13,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
-    use Notifiable;
+    use HasApiTokens,Notifiable;
 
     const USUARIO_VERIFICADO = '1';
     const USUARIO_NO_VERIFICADO = '0';
