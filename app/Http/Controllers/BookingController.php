@@ -3,12 +3,16 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\BookingSector;
-use App\BookingMesa;
+use Illuminate\Support\Facades\Auth; 
 use App\Booking;
+use App\RoleUser;
 use App\User;
-use App\Franchisee;
+use App\UserClientAdmin; 
+use App\Sector;
 use App\Client;
+use App\Franchise; 
+use App\BookingMesa;
+use App\BookingSector;
  
 class BookingController extends Controller
 {
@@ -87,7 +91,7 @@ class BookingController extends Controller
             $reservas[] = $reserva;
         } 
          
-        return view('admin.paginas.reservas.index',['reservas'=>$reservas, "clients"=>$clients, "sectors"=>$sectors, "rol"=>$role->role_id]);
+        return response()->json(["rpta"=>"ok", "msg"=>"",'reservas'=>$reservas, "clients"=>$clients, "sectors"=>$sectors, "rol"=>$role->role_id]); 
     }
 
     /**
@@ -107,7 +111,15 @@ class BookingController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {   
+    {  
+        $validatedData = $request->validate([
+            'amount' => 'required|numeric',
+            'date' => 'required',
+            'hora0' => 'required',
+            'horaf' => 'required',
+            'user_id' => 'required|numeric',
+            'client_id' => 'required|numeric',
+        ]); 
 
         $booking = new Booking;
         $booking->amount = $request->amount;

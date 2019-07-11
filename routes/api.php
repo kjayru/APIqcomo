@@ -61,7 +61,7 @@ Route::get('/api/franquiciado_estuve/{id}','SalesController@estuve')->name('api.
 Route::get('/api/mispuntos/{id}','UserClientPointController@mispuntos')->name('api.mispuntos');
 
 Route::get('/api/regalos/{id}','GiftsController@misregalos')->name('api.regalos');
-Route::get('/api/reservas/{id}','BookingController@misreservas')->name('api.reservas');
+Route::get('/api/reservas/{id}','BookingController@index')->name('api.reservas');
 Route::get('/api/pedidos/{id}','SalesController@mispedidos')->name('api.pedidos');
 Route::get('/api/cupones/{id}','CouponsController@miscupones')->name('api.cupones');
 
