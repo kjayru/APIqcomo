@@ -60,7 +60,7 @@ class RegistrationController extends ApiController
                 'remember_token' => $token->access_token,
             ])->save();
     
-            return response()->json(['rpta'=>'ok', 'user'=>$user, 'token'=>$token]);
+            return response()->json(['rpta'=>'ok', 'user'=>$user, 'token'=>$token, 'msg'=>'Usuario logueado']);
         }
         else{
             
@@ -89,7 +89,7 @@ class RegistrationController extends ApiController
             
             $ac = new AuthController();
             $token = $ac->login($request);
-            return response()->json(['rpta'=>'ok', 'user'=>$created_user, 'token'=>$token]);
+            return response()->json(['rpta'=>'ok', 'user'=>$created_user, 'token'=>$token, 'msg'=>'Usuario creado correctamente']);
         }
          
     }
