@@ -52,10 +52,12 @@ class RegistrationController extends ApiController
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
             $id = Auth::id();  
-            $token = Str::random(60);
+            //$token = Str::random(60);
+            $ac = new AuthController();
+            $token = $ac->login($request);
     
             $request->user()->forceFill([
-                'remember_token' => hash('sha256', $token),
+                'remember_token' => $token->access_token,
             ])->save();
     
             return response()->json(['rpta'=>'ok', 'user'=>$user, 'token'=>$token]);
