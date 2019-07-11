@@ -57,7 +57,7 @@ class RegistrationController extends ApiController
             $token = $ac->login($request);
     
             $request->user()->forceFill([
-                'remember_token' => $token->access_token,
+                'remember_token' => Str::random(60),
             ])->save();
     
             return response()->json(['rpta'=>'ok', 'user'=>$user, 'token'=>$token, 'msg'=>'Usuario logueado']);
