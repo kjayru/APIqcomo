@@ -37,7 +37,7 @@ class BookingController extends Controller
         $to = date('Y-m-d', strtotime($from));
         $date_arr = explode('-', $to);
 
-        $temp = Booking::where(['day'=>$to,'user_id'=>$user_id])->get(); 
+        $temp = Booking::where('user_id',$user_id)->where('day','>=',$to)->get(); 
     
         $item = [];
         foreach($temp as $subtemp){    
