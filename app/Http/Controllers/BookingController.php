@@ -28,70 +28,55 @@ class BookingController extends Controller
 
         //segun el tipo de rol
         $user_id = Auth::id();
-        $user = User::where('id', $user_id)->first();
-        $role = RoleUser::where('user_id', $user_id)->first();
+        $user = User::where('id', $user_id)->first(); 
          
         $clients = [];
-        $sectors = []; 
-        if($role->role_id == 1){
-            $clients = Client::all();
-        }
-        else if($role->role_id == 2){
-            $clients = Franchise::where('user_id',$user_id)->first()->Clients;
-            $sectors = [];//segun cliente a seleccionar carga los sectores
-        }
-        else if($role->role_id == 5){
-            $client = UserClientAdmin::where('user_id',$user_id)->first();
-            $sectors = Sector::where('client_id', $client->id)->get();
-        }
+        $sectors = [];  
 
-        for($i=0;$i<5;$i++){
-            //reservas del dia            
-            $cmd = " + ".$i." days";
-            $to = date('Y-m-d', strtotime($from. $cmd));
-            $date_arr = explode('-', $to);
+        //reservas del dia        
+        $to = date('Y-m-d', strtotime($from));
+        $date_arr = explode('-', $to);
 
-            if($role->role_id == 5 && $client != ""){
-                $temp = Booking::where(['day'=>$to,'client_id'=>$client->client_id])->get(); 
-            }else if($role->role_id == 1){
-                $temp = Booking::where('day', $to)->get(); 
+        if($role->role_id == 5 && $client != ""){
+            $temp = Booking::where(['day'=>$to,'client_id'=>$client->client_id])->get(); 
+        }else if($role->role_id == 1){
+            $temp = Booking::where('day', $to)->get(); 
+        }else{
+            $temp = [];
+        }
+    
+        $item = [];
+        foreach($temp as $subtemp){    
+            $subitem = $subtemp;
+            $user_booking = $subtemp->user;
+            $subitem['name'] = $user_booking->name;
+            if( empty($user_booking->telefono) ){
+                $subitem['cellphone'] = 'no especificado';        
+            } else{
+                $subitem['cellphone'] = $user_booking->telefono;
+            } 
+
+            $booking_sector = BookingSector::where('booking_id',$subtemp->id)->first(); 
+
+            if( empty($booking_sector) ){
+                $subitem['sector'] = 'no especificado';  
+            } else{
+                $subitem['sector'] = $booking_sector->sector->name;
+            }
+            if( empty($subtemp->estado) ){
+                $subitem['estado'] = 'no especificiado';
             }else{
-                $temp = [];
+                $subitem['estado'] = $subtemp->estado->name;
             }
-        
-            $item = [];
-            foreach($temp as $subtemp){    
-                $subitem = $subtemp;
-                $user_booking = $subtemp->user;
-                $subitem['name'] = $user_booking->name;
-                if( empty($user_booking->telefono) ){
-                    $subitem['cellphone'] = 'no especificado';        
-                } else{
-                    $subitem['cellphone'] = $user_booking->telefono;
-                } 
+            $item[] = $subitem;
+        }
 
-                $booking_sector = BookingSector::where('booking_id',$subtemp->id)->first(); 
-
-                if( empty($booking_sector) ){
-                    $subitem['sector'] = 'no especificado';  
-                } else{
-                    $subitem['sector'] = $booking_sector->sector->name;
-                }
-                if( empty($subtemp->estado) ){
-                    $subitem['estado'] = 'no especificiado';
-                }else{
-                    $subitem['estado'] = $subtemp->estado->name;
-                }
-                $item[] = $subitem;
-            }
-
-            $reserva=[];  
-            $reserva['data'] = $item;
-            $reserva['day'] = $to;
-            $reservas[] = $reserva;
-        } 
+        $reserva=[];  
+        $reserva['data'] = $item;
+        $reserva['day'] = $to;
+        $reservas[] = $reserva; 
          
-        return response()->json(["rpta"=>"ok", "msg"=>"",'reservas'=>$reservas, "clients"=>$clients, "sectors"=>$sectors, "rol"=>$role->role_id]); 
+        return response()->json(["rpta"=>"ok", "msg"=>"",'reservas'=>$reservas, "clients"=>$clients, "sectors"=>$sectors]); 
     }
 
     /**
