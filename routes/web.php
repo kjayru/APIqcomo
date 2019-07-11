@@ -29,10 +29,6 @@ Route::get('/home/my-clients', 'HomeController@getClients')->name('personal-clie
 Route::get('/home/authorized-clients', 'HomeController@getAuthorizedClients')->name('authorized-clients');
 Route::get('/home', 'HomeController@index')->name('home');
 
-
-Route::get('/',function(){
-    return view('welcome');
-})->middleware('guest');
  
 
 Auth::routes();
