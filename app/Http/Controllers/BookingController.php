@@ -35,15 +35,8 @@ class BookingController extends Controller
 
         //reservas del dia        
         $to = date('Y-m-d', strtotime($from));
-        $date_arr = explode('-', $to);
-
-        if($role->role_id == 5 && $client != ""){
-            $temp = Booking::where(['day'=>$to,'client_id'=>$client->client_id])->get(); 
-        }else if($role->role_id == 1){
-            $temp = Booking::where('day', $to)->get(); 
-        }else{
-            $temp = [];
-        }
+        $date_arr = explode('-', $to); 
+        $temp = Booking::where(['day'=>$to,'client_id'=>$client->client_id])->get(); 
     
         $item = [];
         foreach($temp as $subtemp){    
