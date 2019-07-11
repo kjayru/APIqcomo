@@ -37,7 +37,7 @@ class BookingController extends Controller
         $to = date('Y-m-d', strtotime($from));
         $date_arr = explode('-', $to);
 
-        $temp = Booking::where('user_id',$user_id)->where('day','>=',$to)->get(); 
+        $temp = Booking::where('user_id',$user_id)->whereDate('day','>=',$to)->get(); 
     
         $item = [];
         foreach($temp as $subtemp){    
@@ -65,9 +65,7 @@ class BookingController extends Controller
             $item[] = $subitem;
         }
 
-        $reserva=[];  
-        $reserva['data'] = $item;
-        $reserva['day'] = $to;
+        $reservas=$item;    
         $reservas[] = $reserva; 
          
         return response()->json(["rpta"=>"ok", "msg"=>"",'reservas'=>$reservas, "clients"=>$clients, "sectors"=>$sectors]); 
