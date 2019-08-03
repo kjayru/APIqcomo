@@ -28,6 +28,7 @@ class MercadoPagoController extends Controller
 
   public function createPaymentPreferences(Request $request)
   { 
+    /*
     //crear preferencia de pago
     $preference = new MercadoPago\Preference();
 
@@ -47,6 +48,16 @@ class MercadoPagoController extends Controller
     $preference->items = $items;
     $preference->payer = $payer;
     $preference->save();
+*/
+
+    $preference_data = [
+  		"items" => [ $items
+  		],
+      "payer" => [
+        "email" => $request->payer->email
+      ]
+  	];
+    $preference = MP::post("/checkout/preferences",$preference_data); 
   
     return ['preference'=>$preference,'rpta'=>'ok']; 
   }
