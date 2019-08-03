@@ -31,27 +31,18 @@ class MercadoPagoController extends Controller
 
   public function createPaymentPreferences(Request $request)
   { 
-    $items = [];
-    foreach ($request->items as $objeto) { 
-      $item = [];
-      $item['title'] = $objeto['title'];
-      $item['description'] = "";
-      $item['picture_url'] = "";
-      $item['quantity'] = $objeto['quantity'];
-      $item['currency_id'] = $objeto['currency_id'];
-      $item['unit_price'] = $objeto['unit_price'];
-      $items[] = $item;
-    }
-
-    
-    //crear preferencia de pago
     $preference = new MercadoPago\Preference();
 
-
+    $item = new MercadoPago\Item();
+    $item->title = "Mediocre Steel Shirt";
+    $item->quantity = 5;
+    $item->currency_id = "PEN";
+    $item->unit_price = 76.04;
+  
     $payer = new MercadoPago\Payer();
-    $payer->email = $request->payer['email'];
-
-    $preference->items = $items;
+    $payer->email = "test_user_19653727@testuser.com";
+  
+    $preference->items = array($item);
     $preference->payer = $payer;
     $preference->save();
 
@@ -65,7 +56,7 @@ class MercadoPagoController extends Controller
   	];
     $preference = MP::post("/checkout/preferences",$preference_data); 
   */
-    return ['preference'=>$preference,'rpta'=>'ok','items'=>$items]; 
+    return ['preference'=>$preference,'rpta'=>'ok']; 
   }
 
   public function onPaymentSuccess()
