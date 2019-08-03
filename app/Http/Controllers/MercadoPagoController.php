@@ -9,7 +9,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 //MercadoPago\SDK::setAccessToken("APP_USR-7932408421765291-072421-f3796d4fe1a8d2bca8c0b54046cf6a95-455030074");      // On Production
-MercadoPago\SDK::setAccessToken("TEST-7932408421765291-072421-3be0e072fc2007beab196402bf265b87-455030074");
+MercadoPago\SDK::configure(['ACCESS_TOKEN' => 'TEST-7932408421765291-072421-3be0e072fc2007beab196402bf265b87-455030074']);
 
 class MercadoPagoController extends Controller
 {
@@ -32,23 +32,28 @@ class MercadoPagoController extends Controller
   public function createPaymentPreferences(Request $request)
   { 
     $items = [];
-    # Create a preference object
+    foreach ($request->items as $objeto) { 
+      $item = [];
+      $item['title'] = $objeto['title'];
+      $item['description'] = "";
+      $item['picture_url'] = "";
+      $item['quantity'] = $objeto['quantity'];
+      $item['currency_id'] = $objeto['currency_id'];
+      $item['unit_price'] = $objeto['unit_price'];
+      $items[] = $item;
+    }
+
+    
+    //crear preferencia de pago
     $preference = new MercadoPago\Preference();
-    # Create an item object
-    $item = new MercadoPago\Item();
-    $item->id = "1234";
-    $item->title = "Aerodynamic Concrete Shirt";
-    $item->quantity = 1;
-    $item->currency_id = "UYU";
-    $item->unit_price = 74.58;
-    # Create a payer object
+
+
     $payer = new MercadoPago\Payer();
-    $payer->email = "cole.dicki@gmail.com";
-    # Setting preference properties
-    $preference->items = array($item);
+    $payer->email = $request->payer['email'];
+
+    $preference->items = $items;
     $preference->payer = $payer;
-    # Save and posting preference
-    $preference->save(); 
+    $preference->save();
 
 /*
     $preference_data = [
