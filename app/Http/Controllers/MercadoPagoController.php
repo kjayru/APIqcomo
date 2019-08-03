@@ -8,6 +8,9 @@ use MercadoPago;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
+//MercadoPago\SDK::setAccessToken("APP_USR-7932408421765291-072421-f3796d4fe1a8d2bca8c0b54046cf6a95-455030074");      // On Production
+MercadoPago\SDK::setAccessToken("TEST-7932408421765291-072421-3be0e072fc2007beab196402bf265b87-455030074");
+
 class MercadoPagoController extends Controller
 {
   public function createPayment()
