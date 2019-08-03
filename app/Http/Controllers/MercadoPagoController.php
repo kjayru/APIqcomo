@@ -49,7 +49,7 @@ class MercadoPagoController extends Controller
 
 
     $payer = new MercadoPago\Payer();
-    $payer->email = $request->payer->email;
+    $payer->email = $request->payer['email'];
 
     $preference->items = $items;
     $preference->payer = $payer;
