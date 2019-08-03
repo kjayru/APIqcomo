@@ -65,7 +65,7 @@ class MercadoPagoController extends Controller
   	];
     $preference = MP::post("/checkout/preferences",$preference_data); 
   */
-    return ['preference'=>$preference,'rpta'=>'ok','status'=>$preference->status]; 
+    return ['preference'=>$preference,'rpta'=>'ok']; 
   }
 
   public function onPaymentSuccess()
