@@ -180,3 +180,15 @@ Route::get('/api/sector/{client}','SectorController@fromClient')->name('sector.c
 
 //añade el numero telefonico del usuario
 Route::post('/api/user/addcellphone','UserController@addCellphone')->name('user.cellphone');
+
+//mercado pago, crear preferencia
+Route::post('/api/mercadopago/gen_preference','MercadoPagoController@createPaymentPreferences')->name('mercadopago.createPreferences');
+
+Route::get('/api/mercadopago/on_success','MercadoPagoController@onPaymentSuccess')->name('sector.sucess');
+
+Route::get('/api/mercadopago/on_cancelled','MercadoPagoController@onPaymentCancelled')->name('sector.cancelled');
+
+Route::get('/api/mercadopago/on_rejected','MercadoPagoController@onPaymentRejected')->name('sector.rejected');
+
+Route::get('/api/mercadopago/notification_url','MercadoPagoController@notification_url')->name('sector.notification');
+

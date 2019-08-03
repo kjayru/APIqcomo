@@ -7,11 +7,14 @@
     "require": {
         "php": ">=7.1",
         "barryvdh/laravel-cors": "^0.11.3",
+        "codemancompany/laravel-mercadopago": "^1.07",
         "fideloper/proxy": "*",
         "guzzlehttp/guzzle": "*",
         "laravel/framework": "5.7.*",
         "laravel/passport": "*",
         "laravel/tinker": "*",
+        "mercadopago/dx-php": "dev-master",
+        "rodggall/mercadopago": "@dev",
         "spatie/laravel-fractal": "*"
     },
     "require-dev": {
