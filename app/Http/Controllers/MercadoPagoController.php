@@ -57,7 +57,7 @@ class MercadoPagoController extends Controller
   		"items" => [ $items
   		],
       "payer" => [
-        "email" => $request->payer->email
+        "email" => $request->payer['email']
       ]
   	];
     $preference = MP::post("/checkout/preferences",$preference_data); 
