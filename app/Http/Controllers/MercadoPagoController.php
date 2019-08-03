@@ -30,7 +30,7 @@ class MercadoPagoController extends Controller
   }
 
   public function createPaymentPreferences(Request $request)
-  { 
+  {  
     
     $preference = new MercadoPago\Preference();
 
@@ -51,18 +51,27 @@ class MercadoPagoController extends Controller
     $preference->items = $items;
     $preference->payer = $payer;
     $preference->save();
+ 
+    $out = []; 
+    $out['binary_mode'] = $preference->binary_mode;
+    $out['processing_modes'] = $preference->processing_modes;
+    $out['payment_methods'] = $preference->payment_methods;
+    $out['collector_id'] = $preference->collector_id;
+    $out['operation_type'] = $preference->operation_type;
+    $out['client_id'] = $preference->client_id;
+    $out['marketplace'] = $preference->marketplace;
+    $out['marketplace_fee'] = $preference->marketplace_fee;
+    $out['notification_url'] = $preference->notification_url;
+    $out['external_reference'] = $preference->external_reference;
+    $out['additional_info'] = $preference->additional_info;
+    $out['expires'] = $preference->expires;
+    $out['expiration_date_from'] = $preference->expiration_date_from;
+    $out['expiration_date_to'] = $preference->expiration_date_to;
+    $out['date_created'] = $preference->date_created;
+    $out['id'] = $preference->id;
+    $out['init_point'] = $preference->init_point;
 
-/*
-    $preference_data = [
-  		"items" => [ $items
-  		],
-      "payer" => [
-        "email" => $request->payer['email']
-      ]
-  	];
-    $preference = MP::post("/checkout/preferences",$preference_data); 
-  */
-    return ['preference'=>$preference,'rpta'=>'ok']; 
+    return ['preference'=>$preference,'rpta'=>'ok','request'=>$out]; 
   }
 
   public function onPaymentSuccess()
