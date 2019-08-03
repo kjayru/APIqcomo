@@ -32,6 +32,9 @@ class MercadoPagoController extends Controller
   public function createPaymentPreferences(Request $request)
   { 
     $items = [];
+    # Create a preference object
+    $preference = new MercadoPago\Preference();
+    # Create an item object
     $item = new MercadoPago\Item();
     $item->id = "1234";
     $item->title = "Aerodynamic Concrete Shirt";
@@ -44,7 +47,8 @@ class MercadoPagoController extends Controller
     # Setting preference properties
     $preference->items = array($item);
     $preference->payer = $payer;
-    $preference->save();
+    # Save and posting preference
+    $preference->save(); 
 
 /*
     $preference_data = [
