@@ -31,12 +31,12 @@ class MercadoPagoController extends Controller
     $items = [];
     foreach ($request->items as $objeto) { 
       $item = [];
-      $item['title'] = $objeto->title;
+      $item['title'] = $objeto['title'];
       $item['description'] = "";
       $item['picture_url'] = "";
-      $item['quantity'] = $objeto->quantity;
-      $item['currency_id'] = $objeto->currency_id;
-      $item['unit_price'] = $objeto->unit_price;
+      $item['quantity'] = $objeto['quantity'];
+      $item['currency_id'] = $objeto['currency_id'];
+      $item['unit_price'] = $objeto['unit_price'];
       $items[] = $item;
     }
 
