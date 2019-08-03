@@ -29,14 +29,14 @@ class MercadoPagoController extends Controller
   public function createPaymentPreferences(Request $request)
   { 
     $items = [];
-    foreach ($request->items as $item) { 
+    foreach ($request->items as $objeto) { 
       $item = [];
-      $item['title'] = $item->title;
+      $item['title'] = $objeto->title;
       $item['description'] = "";
       $item['picture_url'] = "";
-      $item['quantity'] = $item->quantity;
-      $item['currency_id'] = $item->currency_id;
-      $item['unit_price'] = $item->unit_price;
+      $item['quantity'] = $objeto->quantity;
+      $item['currency_id'] = $objeto->currency_id;
+      $item['unit_price'] = $objeto->unit_price;
       $items[] = $item;
     }
 
