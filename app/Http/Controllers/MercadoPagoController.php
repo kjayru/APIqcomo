@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
-use MP;
+ 
+use MercadoPago;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
@@ -40,7 +40,7 @@ class MercadoPagoController extends Controller
       $items[] = $item;
     }
 
-    /*
+    
     //crear preferencia de pago
     $preference = new MercadoPago\Preference();
 
@@ -51,8 +51,8 @@ class MercadoPagoController extends Controller
     $preference->items = $items;
     $preference->payer = $payer;
     $preference->save();
-*/
 
+/*
     $preference_data = [
   		"items" => [ $items
   		],
@@ -61,7 +61,7 @@ class MercadoPagoController extends Controller
       ]
   	];
     $preference = MP::post("/checkout/preferences",$preference_data); 
-  
+  */
     return ['preference'=>$preference,'rpta'=>'ok']; 
   }
 
