@@ -9,7 +9,7 @@
         "barryvdh/laravel-cors": "^0.11.3",
         "fideloper/proxy": "*",
         "guzzlehttp/guzzle": "*",
-        "laravel/framework": "5.7.*",
+        "laravel/framework": "5.8.*",
         "laravel/passport": "*",
         "laravel/tinker": "*",
         "spatie/laravel-fractal": "*"
